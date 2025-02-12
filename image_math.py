@@ -4,6 +4,7 @@ import groq
 from typing import List
 from dataclasses import dataclass
 from manim import *
+from multiprocessing import Pool
 
 @dataclass
 class MathSolution:
@@ -49,7 +50,7 @@ class MathAnimationGenerator:
                     {"role": "system", "content": f"Generate a step-by-step solution for this {problem_type} problem."},
                     {"role": "user", "content": problem}
                 ],
-                temperature=0.2
+                temperature=0.7
             )
             solution_text = response.choices[0].message.content.strip()
             steps = [step.strip() for step in solution_text.split('\n') if step.strip()]
@@ -97,8 +98,8 @@ class MathSolutionScene(Scene):
             self.play(Write(step_text), Create(vis))
             prev_text = step_text
             prev_vis = vis
-            self.wait(2)
-        self.wait(3)
+            self.wait(0.5)  # Reduced wait time
+        self.wait(0.5)  # Reduced wait time
 '''
 
     def save_script(self, script: str, path: str):
@@ -108,7 +109,7 @@ class MathSolutionScene(Scene):
 
     def render_animation(self, script_path: str, output_dir: str) -> bool:
         try:
-            command = ["manim", "-pqh", script_path, "MathSolution", "--media_dir", output_dir]
+            command = ["manim", "-pql", script_path, "MathSolutionScene", "--media_dir", output_dir]  # Lower quality setting
             print("\nGenerating animation... Please wait.")
             subprocess.run(command, check=True)
             return True
