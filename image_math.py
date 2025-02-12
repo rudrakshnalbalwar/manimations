@@ -108,10 +108,12 @@ class MathSolutionScene(Scene):
 
     def render_animation(self, script_path: str, output_dir: str) -> bool:
         try:
-            subprocess.run(["manim", "-pqh", script_path, "MathSolutionScene", "--media_dir", output_dir], check=True)
+            command = ["manim", "-pqh", script_path, "MathSolution", "--media_dir", output_dir]
+            print("\nGenerating animation... Please wait.")
+            subprocess.run(command, check=True)
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Animation rendering failed: {e}")
+            print(f"Error generating animation: {e}")
             return False
 
     def generate_animation(self):
